@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:background="@color/white"
+    android:layout_height="match_parent"
+    android:gravity="center_horizontal">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="100dp"
+        android:textSize="30sp"
+        android:textColor="@color/black"
+        android:text="Create An Account"
+        android:fontFamily="@font/uber"
+        android:gravity="center"
+        android:layout_marginBottom="100dp"/>
+
+    <EditText
+        android:layout_width="300dp"
+        android:layout_height="50dp"
+        android:fontFamily="@font/uber"
+        android:hint="Username..."
+        android:background="@drawable/edittext_background"
+        android:padding="10dp"
+        android:textColor="@android:color/white"
+        android:textColorHint="@color/black"
+        android:textSize="16sp"
+        android:layout_marginBottom="20dp"/>
+    <EditText
+        android:layout_width="300dp"
+        android:layout_height="50dp"
+        android:fontFamily="@font/uber"
+        android:hint="Email..."
+        android:background="@drawable/edittext_background"
+        android:padding="10dp"
+        android:textColor="@android:color/white"
+        android:textColorHint="@color/black"
+        android:textSize="16sp"
+        android:layout_marginBottom="20dp"/>
+
+
+    <EditText
+        android:layout_width="300dp"
+        android:layout_height="50dp"
+        android:fontFamily="@font/uber"
+        android:hint="Password..."
+        android:background="@drawable/edittext_background"
+        android:padding="10dp"
+        android:textColor="@android:color/white"
+        android:textColorHint="@color/black"
+        android:textSize="16sp"
+        android:layout_marginBottom="20dp"/>
+
+    <EditText
+        android:layout_width="300dp"
+        android:layout_height="50dp"
+        android:fontFamily="@font/uber"
+        android:hint="Confirm Password..."
+        android:background="@drawable/edittext_background"
+        android:padding="10dp"
+        android:textColor="@android:color/white"
+        android:textColorHint="@color/black"
+        android:textSize="16sp"
+        android:layout_marginBottom="20dp"/>
+
+    <Button
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:layout_marginTop="80dp"
+        android:background="@drawable/next"
+        android:textColor="@color/black" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/black"
+        android:layout_marginTop="40dp"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:text="Already a member? Sign in here."/>
+
+</LinearLayout>
