@@ -9,7 +9,7 @@ import androidx.appcompat.app.AppCompatActivity;
 public class DashboardActivity extends ComponentActivity {
 
     private ListView listView;
-    private String[] items = {"Workouts", "History"};
+    private String[] items = {"Workouts", "History","Create"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

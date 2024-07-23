@@ -51,6 +51,86 @@
 
     </LinearLayout>
 
+    <!-- Horizontal bar with 7 days -->
+    <HorizontalScrollView
+        android:id="@+id/dayAmount"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="15dp">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Day 1"
+                android:background="@color/blueish"
+                android:textSize="18sp"
+                android:textColor="@color/black"
+                android:padding="8dp"
+                android:gravity="center" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Day 2"
+                android:textSize="18sp"
+                android:textColor="@color/black"
+                android:padding="8dp"
+                android:gravity="center" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Day 3"
+                android:textSize="18sp"
+                android:textColor="@color/black"
+                android:padding="8dp"
+                android:gravity="center" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Day 4"
+                android:textSize="18sp"
+                android:textColor="@color/black"
+                android:padding="8dp"
+                android:gravity="center" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Day 5"
+                android:textSize="18sp"
+                android:textColor="@color/black"
+                android:padding="8dp"
+                android:gravity="center" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Day 6"
+                android:textSize="18sp"
+                android:textColor="@color/black"
+                android:padding="8dp"
+                android:gravity="center" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Day 7"
+                android:textSize="18sp"
+                android:textColor="@color/black"
+                android:padding="8dp"
+                android:gravity="center" />
+
+        </LinearLayout>
+
+    </HorizontalScrollView>
+
     <!-- Main content layout -->
     <LinearLayout
         android:layout_width="match_parent"
@@ -59,20 +139,22 @@
         android:orientation="vertical"
         android:padding="16dp">
 
+        <ListView
+            android:id="@+id/listViewLog"
+            android:layout_width="match_parent"
+            android:layout_height="362dp"
+            android:layout_weight="1"
+            android:visibility="visible" />
+
         <TextView
+            android:id="@+id/noneAdded"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/black"
-            android:text="Week 1"
-            android:textSize="24sp"
+            android:text="None added."
+            android:textSize="16sp"
             android:layout_marginBottom="8dp"
-            android:gravity="center_vertical" />
-
-        <ListView
-            android:id="@+id/listView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_gravity="center_horizontal" />
 
     </LinearLayout>
-q
+
 </LinearLayout>

@@ -1,5 +1,6 @@
 package com.example.gymapp;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.widget.ArrayAdapter;
@@ -42,7 +43,6 @@ public class apiRecevier extends ComponentActivity {
     private void fetchExercises() {
         new Thread(() -> {
             try {
-                // Use the search query to build the API URL
                 String apiUrl = "https://api.api-ninjas.com/v1/exercises?muscle=" + searchQuery;
                 String apiKey = "fyL/rfKoLjujVUTNHtnCbw==fFVCrisTBu14sqh0"; // Replace with your actual API key
 
@@ -56,29 +56,58 @@ public class apiRecevier extends ComponentActivity {
                 JsonNode root = mapper.readTree(responseStream);
 
                 List<String> exercisesList = new ArrayList<>();
-                // Assuming the API response is an array of exercises
+                List<String> exerciseNamesList = new ArrayList<>();
                 for (JsonNode exercise : root) {
+                    String exerciseName = exercise.path("name").asText();
                     String exerciseDetails = String.format("Name: %s\nType: %s\nMuscle: %s\nEquipment: %s\nDifficulty: %s\nInstructions: %s",
-                            exercise.path("name").asText(),
+                            exerciseName,
                             exercise.path("type").asText(),
                             exercise.path("muscle").asText(),
                             exercise.path("equipment").asText(),
                             exercise.path("difficulty").asText(),
                             exercise.path("instructions").asText());
+
                     exercisesList.add(exerciseDetails);
+                    exerciseNamesList.add(exerciseName); // Store exercise names separately
                 }
 
                 final List<String> finalExercisesList = exercisesList;
+                final List<String> finalExerciseNamesList = exerciseNamesList;
+
                 runOnUiThread(() -> {
-                    // Create and set adapter for ListView
                     ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
                             android.R.layout.simple_list_item_1, finalExercisesList);
                     listView.setAdapter(adapter);
+
+                    listView.setOnItemClickListener((parent, view, position, id) -> {
+                        String selectedExerciseDetails = finalExercisesList.get(position);
+                        String selectedExerciseName = finalExerciseNamesList.get(position);
+
+                        Intent resultIntent = new Intent();
+                        resultIntent.putExtra("SELECTED_EXERCISE_DETAILS", selectedExerciseDetails);
+                        resultIntent.putExtra("SELECTED_EXERCISE_NAME", selectedExerciseName);
+                        setResult(RESULT_OK, resultIntent);
+                        finish();
+                    });
                 });
 
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }).start();
+    }
+
+
+    // Method to extract the exercise name from the details string
+    private String extractExerciseName(String exerciseDetails) {
+        // Assuming the name is always the first line and starts with "Name: "
+        int nameStartIndex = exerciseDetails.indexOf("Name: ");
+        if (nameStartIndex != -1) {
+            int nameEndIndex = exerciseDetails.indexOf("\n", nameStartIndex);
+            if (nameEndIndex != -1) {
+                return exerciseDetails.substring(nameStartIndex + 6, nameEndIndex).trim(); // Extract and trim the name
+            }
+        }
+        return ""; // Return an empty string if name extraction fails
     }
 }

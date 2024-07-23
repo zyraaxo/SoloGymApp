@@ -1,16 +1,32 @@
+// Workout.java
 package com.example.gymapp;
 
-import androidx.room.Entity;
-import androidx.room.PrimaryKey;
-
-@Entity
 public class Workout {
-    @PrimaryKey(autoGenerate = true)
-    public int id;
+    private String name;
+    private String sets;
+    private String reps;
+    private int day; // Add this attribute
 
-    public String exerciseName;
-    public int sets;
-    public int reps;
-    public float rpe;
-    public String notes;
+    public Workout(String name, String sets, String reps, int day) {
+        this.name = name;
+        this.sets = sets;
+        this.reps = reps;
+        this.day = day;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getSets() {
+        return sets;
+    }
+
+    public String getReps() {
+        return reps;
+    }
+
+    public int getDay() {
+        return day;
+    }
 }

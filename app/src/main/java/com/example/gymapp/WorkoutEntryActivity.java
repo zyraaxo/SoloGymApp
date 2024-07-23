@@ -2,22 +2,40 @@ package com.example.gymapp;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
+import android.os.StrictMode;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 
 import androidx.activity.ComponentActivity;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.room.Entity;
-import androidx.room.PrimaryKey;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class WorkoutEntryActivity extends ComponentActivity {
 
     private EditText editTextExerciseName, editTextSets, editTextReps, editTextRPE, editTextNotes, searchBar;
     private Button buttonSave;
     private ImageView searchButton;
+    private RecyclerView recyclerView;
+    private int reps, sets;
+
+    private static final int REQUEST_CODE = 1;
+    private List<String> selectedExercisesList = new ArrayList<>();
+    private ExercisesAdapter adapter;
+
+    private List<String> setsRepsRPE = new ArrayList<String>();
+    private List<String> repsRPE = new ArrayList<String>();
+    private List<String> name = new ArrayList<String>();
+
+
+    public WorkoutEntryActivity() {
+        super();
+    }
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,55 +51,48 @@ public class WorkoutEntryActivity extends ComponentActivity {
         buttonSave = findViewById(R.id.buttonSave);
         searchBar = findViewById(R.id.search_bar);
         searchButton = findViewById(R.id.searchBtn);
+        recyclerView = findViewById(R.id.recyclerViewExercises);
+
+        // Enable strict mode policy for quick network testing (not recommended for production)
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
 
         // Set up button click listener
-        buttonSave.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                saveWorkout();
-            }
-        });
+        buttonSave.setOnClickListener(v -> saveWorkout());
 
-        searchButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(WorkoutEntryActivity.this, apiRecevier.class);
-                startActivity(intent);
-                saveWorkouts();
-            }
-        });
+        searchButton.setOnClickListener(view -> saveWorkouts());
+
+        adapter = new ExercisesAdapter(selectedExercisesList, exercise -> {});
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setAdapter(adapter);
+
     }
+    private List<Workout> workoutList = new ArrayList<>();
+    private WorkoutAdapter adapters;
 
     private void saveWorkout() {
-        // Retrieve input values
         String exerciseName = editTextExerciseName.getText().toString();
         String sets = editTextSets.getText().toString();
         String reps = editTextReps.getText().toString();
         String rpe = editTextRPE.getText().toString();
         String notes = editTextNotes.getText().toString();
 
-        // Validation (optional)
-        if (exerciseName.isEmpty() || sets.isEmpty() || reps.isEmpty() || rpe.isEmpty()) {
-            // Handle validation error (e.g., show a Toast)
+        if (exerciseName.isEmpty() || sets.isEmpty() || reps.isEmpty()) {
             return;
         }
 
-        // Save data (e.g., to a database or shared preferences)
-        // For simplicity, this example uses a Toast message
-        String message = String.format("Saved: %s, Sets: %s, Reps: %s, RPE: %s, Notes: %s",
-                exerciseName, sets, reps, rpe, notes);
-        // Display the saved data (replace this with actual saving logic)
-        // Toast.makeText(this, message, Toast.LENGTH_LONG).show();
-
-        // Optionally, start another activity or finish this one
-        // startActivity(new Intent(this, AnotherActivity.class));
-        // finish();
+        Intent resultIntent = new Intent();
+        resultIntent.putExtra("EXERCISE_NAME", exerciseName);
+        resultIntent.putExtra("SETS", sets);
+        resultIntent.putExtra("REPS", reps);
+        setResult(RESULT_OK, resultIntent);
+        finish();
     }
 
-    // Method to get the query from the search bar
     private String getSearchQuery() {
         return searchBar.getText().toString().trim();
     }
+
     private void saveWorkouts() {
         // Retrieve search query
         String searchQuery = getSearchQuery();
@@ -90,9 +101,28 @@ public class WorkoutEntryActivity extends ComponentActivity {
         Intent intent = new Intent(this, apiRecevier.class);
         intent.putExtra("EXTRA_SEARCH_QUERY", searchQuery);
 
-        // Start the new activity
-        startActivity(intent);
+        // Start the new activity for result
+        startActivityForResult(intent, REQUEST_CODE);
     }
 
-}
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE && resultCode == RESULT_OK) {
+            String selectedExerciseDetails = data.getStringExtra("SELECTED_EXERCISE_DETAILS");
+            String selectedExerciseName = data.getStringExtra("SELECTED_EXERCISE_NAME");
 
+            if (selectedExerciseDetails != null) {
+                // Set the exercise name to the EditText
+                editTextExerciseName.setText(selectedExerciseName);
+
+                // Add the full details to the RecyclerView list
+                selectedExercisesList.add(selectedExerciseDetails);
+                adapter.notifyDataSetChanged();
+            }
+        }
+    }
+
+
+
+}

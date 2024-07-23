@@ -4,11 +4,13 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="16dp">
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_marginBottom="150dp"
+        android:layout_marginBottom="70dp"
+        android:layout_marginTop="50dp"
         android:gravity="center_vertical">
 
         <!-- Image view for the icon -->
@@ -18,7 +20,7 @@
             android:layout_height="40dp"
             android:layout_marginEnd="8dp"
             android:src="@drawable/sicqn"
-           />
+            />
 
         <!-- EditText for search bar -->
         <EditText
@@ -26,13 +28,30 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:hint="Search"
+            android:hint="Search muscle groups here.."
             android:background="@drawable/search_bar_background"
             android:padding="10dp"
             android:textColorHint="#888888" />
 
     </LinearLayout>
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerViewExercises"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_marginBottom="100dp"
+        android:background="#f0f0f0"/>
 
+
+
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Add Exercise manually to.."
+        android:layout_marginBottom="10dp"
+        />
 
     <EditText
         android:id="@+id/editTextExerciseName"
@@ -74,4 +93,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Save" />
+
+
 </LinearLayout>

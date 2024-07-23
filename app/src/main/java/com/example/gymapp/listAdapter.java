@@ -56,6 +56,9 @@ public class listAdapter extends ArrayAdapter<String> {
             } else if (position == 1) {
                 // Handle click event for position 1
             }
+            else if (position == 2) {
+                context.startActivity(new Intent(context, ExerciseSelectionActivity.class));
+            }
             // Add more cases as needed for other positions
         });
 

@@ -31,6 +31,9 @@
         <activity android:name=".DashboardActivity" />
         <activity android:name=".exercise" />
         <activity android:name=".apiRecevier" />
+        <activity android:name=".ExerciseSelectionActivity" />
+
+
 
 
 
