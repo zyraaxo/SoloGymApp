@@ -168,10 +168,11 @@
             android:layout_gravity="center_horizontal" />
 
         <Button
+            android:id="@+id/saveBtn1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Save Workout"
-            android:layout_gravity="center_horizontal">
+            android:layout_gravity="center_horizontal"
+            android:text="Save Workout">
 
         </Button>
 

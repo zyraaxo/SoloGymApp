@@ -52,7 +52,9 @@ public class listAdapter extends ArrayAdapter<String> {
         convertView.setOnClickListener(v -> {
             if (position == 0) {
                 // Handle click event for position 0
-                context.startActivity(new Intent(context, exercise.class));
+                Intent intent = new Intent(context, exercise.class);
+                intent.putExtra("HIDE_BUTTON", true); // Pass the extra to hide the button
+                context.startActivity(intent);
             } else if (position == 1) {
                 // Handle click event for position 1
             }

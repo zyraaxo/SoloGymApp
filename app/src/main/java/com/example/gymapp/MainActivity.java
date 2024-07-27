@@ -78,10 +78,17 @@ public class MainActivity extends ComponentActivity {
             return;
         }
 
-        // Check if user exists
-        if (dbHelper.checkUser(username, password)) {
+        // Check if user exists and get user ID
+        int userId = dbHelper.checkUser(username, password);
+        if (userId != -1) {
             // User exists, handle successful login
             Toast.makeText(MainActivity.this, "Login successful!", Toast.LENGTH_SHORT).show();
+
+            // Create user session
+            UserSessionManager sessionManager = new UserSessionManager(MainActivity.this);
+            sessionManager.createLoginSession(userId);
+
+            // Redirect to the dashboard
             Intent intent = new Intent(MainActivity.this, DashboardActivity.class);
             startActivity(intent);
         } else {

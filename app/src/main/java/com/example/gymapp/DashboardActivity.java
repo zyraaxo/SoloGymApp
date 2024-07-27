@@ -16,6 +16,7 @@ public class DashboardActivity extends ComponentActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.dashboard);
 
+
         listView = findViewById(R.id.lists);
 
         // Create an instance of the custom adapter and set it to the ListView

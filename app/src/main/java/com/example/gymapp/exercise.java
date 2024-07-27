@@ -1,7 +1,10 @@
 package com.example.gymapp;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
@@ -9,10 +12,10 @@ import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.ComponentActivity;
 
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -29,18 +32,23 @@ public class exercise extends ComponentActivity {
     private ArrayList<Workout> workoutList;
     private HashMap<Integer, ArrayList<Workout>> exercisesByDay;
     private int currentDay = 1;
-
+    public Button saveBtn;
     private TextView dayTextView;
+    private DatabaseHelper dbHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.exercise_log);
+
+        // Retrieve the saved number of days
+        SharedPreferences preferences = getSharedPreferences("GymAppPrefs", MODE_PRIVATE);
+        int savedDays = preferences.getInt("number_of_days", 7); // Default to 7 if not found
+
         Calendar calendar = Calendar.getInstance();
         calendar.setFirstDayOfWeek(Calendar.MONDAY);
         calendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
-
-
+        saveBtn = findViewById(R.id.saveBtn1);
 
         SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
         String firstDay = format.format(calendar.getTime());
@@ -50,12 +58,7 @@ public class exercise extends ComponentActivity {
 
         String dateRange = firstDay + " - " + lastDay;
         dayTextView = findViewById(R.id.dates);
-
-
         dayTextView.setText(dateRange);
-
-
-
 
         addBtn = findViewById(R.id.addBtn);
         showExercises = findViewById(R.id.listViewLog);
@@ -63,33 +66,96 @@ public class exercise extends ComponentActivity {
         dayAmount = findViewById(R.id.dayAmount);
 
         workoutList = new ArrayList<>();
-        exercisesByDay = new HashMap<>(); // Initialize the HashMap
+        exercisesByDay = new HashMap<>();
         adapter = new WorkoutAdapter(this, workoutList);
         showExercises.setAdapter(adapter);
 
-        // Retrieve selected days from the intent
-        int selectedDays = getIntent().getIntExtra("selectedDays", 1);
+        dbHelper = new DatabaseHelper(this);
+        int selectedDays = getIntent().getIntExtra("selectedDays", savedDays);
         updateDays(selectedDays);
 
         addBtn.setOnClickListener(v -> {
             Intent intent = new Intent(this, WorkoutEntryActivity.class);
-            intent.putExtra("selectedDay", currentDay); // Pass the current day to the new activity
+            intent.putExtra("selectedDay", currentDay);
             startActivityForResult(intent, 1);
         });
+
         showExercises.setOnItemClickListener((parent, view, position, id) -> {
             Workout selectedWorkout = workoutList.get(position);
             Intent intent = new Intent(exercise.this, editExercise.class);
             intent.putExtra("EXERCISE_NAME", selectedWorkout.getName());
             intent.putExtra("SETS", selectedWorkout.getSets());
             intent.putExtra("REPS", selectedWorkout.getReps());
-            intent.putExtra("POSITION", position); // Pass the position of the clicked item
-            startActivityForResult(intent, 2); // Use a different requestCode
+            intent.putExtra("POSITION", position);
+            startActivityForResult(intent, 2);
         });
 
+        Intent intent = getIntent();
+        if (intent != null && intent.getBooleanExtra("HIDE_BUTTON", false)) {
+            saveBtn.setVisibility(View.INVISIBLE);
+        }
 
+        saveBtn.setOnClickListener(v -> {
+            int userId = getCurrentUserId();
+            saveWorkoutsToDatabase(userId);
+        });
 
-
+        loadWorkoutsForUser();
     }
+
+    private void loadWorkoutsForUser() {
+        int userId = getCurrentUserId();
+        Cursor cursor = dbHelper.getWorkoutsForUser(userId);
+
+        if (cursor != null) {
+            String[] columnNames = cursor.getColumnNames();
+            for (String columnName : columnNames) {
+                Log.d("CursorColumn", "Column: " + columnName);
+            }
+
+            if (cursor.moveToFirst()) {
+                do {
+                    String name = cursor.getString(cursor.getColumnIndex(DatabaseHelper.COLUMN_WORKOUT_NAME));
+                    String sets = cursor.getString(cursor.getColumnIndex(DatabaseHelper.COLUMN_SETS));
+                    String reps = cursor.getString(cursor.getColumnIndex(DatabaseHelper.COLUMN_REPS));
+                    int day = cursor.getInt(cursor.getColumnIndex(DatabaseHelper.COLUMN_DAY)); // Read the day from cursor
+
+                    Workout workout = new Workout(name, sets, reps, day);
+                    if (!exercisesByDay.containsKey(day)) {
+                        exercisesByDay.put(day, new ArrayList<>());
+                    }
+                    exercisesByDay.get(day).add(workout);
+                } while (cursor.moveToNext());
+
+                cursor.close();
+                updateWorkoutListForDay();
+            }
+        }
+    }
+
+
+    private void saveNumberOfDays(int days) {
+        SharedPreferences preferences = getSharedPreferences("GymAppPrefs", MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putInt("number_of_days", days);
+        editor.apply();
+    }
+
+
+
+    private void saveWorkoutsToDatabase(int userId) {
+        for (int day : exercisesByDay.keySet()) {
+            ArrayList<Workout> workouts = exercisesByDay.get(day);
+            if (workouts != null) {
+                for (Workout workout : workouts) {
+                    dbHelper.insertWorkout(userId, workout.getName(), workout.getSets(), workout.getReps(), day);
+                }
+            }
+        }
+
+        Toast.makeText(this, "Workouts saved to database", Toast.LENGTH_SHORT).show();
+    }
+
 
     public void updateDays(int days) {
         LinearLayout dayLayout = (LinearLayout) ((HorizontalScrollView) findViewById(R.id.dayAmount)).getChildAt(0);
@@ -114,12 +180,19 @@ public class exercise extends ComponentActivity {
 
             dayLayout.addView(dayTextView);
         }
+
+        // Save the number of days
+        saveNumberOfDays(days);
     }
+
 
     private void updateWorkoutListForDay() {
         workoutList.clear();
         if (exercisesByDay != null && exercisesByDay.containsKey(currentDay)) {
-            workoutList.addAll(Objects.requireNonNull(exercisesByDay.get(currentDay)));
+            ArrayList<Workout> workouts = exercisesByDay.get(currentDay);
+            if (workouts != null) {
+                workoutList.addAll(workouts);
+            }
         }
         adapter.notifyDataSetChanged();
         noneAdded.setVisibility(workoutList.isEmpty() ? View.VISIBLE : View.GONE);
@@ -129,14 +202,13 @@ public class exercise extends ComponentActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 1 && resultCode == RESULT_OK) {
-            // Retrieve the workout details and day from the intent
             String name = data.getStringExtra("EXERCISE_NAME");
             String sets = data.getStringExtra("SETS");
             String reps = data.getStringExtra("REPS");
             int day = data.getIntExtra("selectedDay", currentDay);
 
             if (exercisesByDay == null) {
-                exercisesByDay = new HashMap<>(); // Initialize if null
+                exercisesByDay = new HashMap<>();
             }
 
             if (!exercisesByDay.containsKey(day)) {
@@ -163,4 +235,9 @@ public class exercise extends ComponentActivity {
         }
     }
 
+    private int getCurrentUserId() {
+        UserSessionManager sessionManager = new UserSessionManager(this);
+        return sessionManager.getUserId();
+    }
 }
+
