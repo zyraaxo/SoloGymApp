@@ -32,6 +32,10 @@
         <activity android:name=".exercise" />
         <activity android:name=".apiRecevier" />
         <activity android:name=".ExerciseSelectionActivity" />
+        <activity android:name=".editExercise" />
+        <activity android:name=".signUp" />
+
+
 
 
 

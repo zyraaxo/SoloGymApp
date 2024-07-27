@@ -12,8 +12,13 @@ import android.widget.TextView;
 
 import androidx.activity.ComponentActivity;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
+import java.util.Locale;
+import java.util.Objects;
 
 public class exercise extends ComponentActivity {
     private Button addBtn;
@@ -25,15 +30,37 @@ public class exercise extends ComponentActivity {
     private HashMap<Integer, ArrayList<Workout>> exercisesByDay;
     private int currentDay = 1;
 
+    private TextView dayTextView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.exercise_log);
+        Calendar calendar = Calendar.getInstance();
+        calendar.setFirstDayOfWeek(Calendar.MONDAY);
+        calendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+
+
+
+        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+        String firstDay = format.format(calendar.getTime());
+
+        calendar.add(Calendar.DAY_OF_MONTH, 6);
+        String lastDay = format.format(calendar.getTime());
+
+        String dateRange = firstDay + " - " + lastDay;
+        dayTextView = findViewById(R.id.dates);
+
+
+        dayTextView.setText(dateRange);
+
+
+
 
         addBtn = findViewById(R.id.addBtn);
         showExercises = findViewById(R.id.listViewLog);
         noneAdded = findViewById(R.id.noneAdded);
-        dayAmount = findViewById(R.id.dayAmount); // Initialize the HorizontalScrollView
+        dayAmount = findViewById(R.id.dayAmount);
 
         workoutList = new ArrayList<>();
         exercisesByDay = new HashMap<>(); // Initialize the HashMap
@@ -49,6 +76,19 @@ public class exercise extends ComponentActivity {
             intent.putExtra("selectedDay", currentDay); // Pass the current day to the new activity
             startActivityForResult(intent, 1);
         });
+        showExercises.setOnItemClickListener((parent, view, position, id) -> {
+            Workout selectedWorkout = workoutList.get(position);
+            Intent intent = new Intent(exercise.this, editExercise.class);
+            intent.putExtra("EXERCISE_NAME", selectedWorkout.getName());
+            intent.putExtra("SETS", selectedWorkout.getSets());
+            intent.putExtra("REPS", selectedWorkout.getReps());
+            intent.putExtra("POSITION", position); // Pass the position of the clicked item
+            startActivityForResult(intent, 2); // Use a different requestCode
+        });
+
+
+
+
     }
 
     public void updateDays(int days) {
@@ -79,7 +119,7 @@ public class exercise extends ComponentActivity {
     private void updateWorkoutListForDay() {
         workoutList.clear();
         if (exercisesByDay != null && exercisesByDay.containsKey(currentDay)) {
-            workoutList.addAll(exercisesByDay.get(currentDay));
+            workoutList.addAll(Objects.requireNonNull(exercisesByDay.get(currentDay)));
         }
         adapter.notifyDataSetChanged();
         noneAdded.setVisibility(workoutList.isEmpty() ? View.VISIBLE : View.GONE);
@@ -106,6 +146,21 @@ public class exercise extends ComponentActivity {
             exercisesByDay.get(day).add(workout);
 
             updateWorkoutListForDay();
+        } else if (requestCode == 2 && resultCode == RESULT_OK) {
+            String updatedName = data.getStringExtra("UPDATED_NAME");
+            String updatedSets = data.getStringExtra("UPDATED_SETS");
+            String updatedReps = data.getStringExtra("UPDATED_REPS");
+            int position = data.getIntExtra("POSITION", -1);
+
+            if (position != -1) {
+                Workout updatedWorkout = workoutList.get(position);
+                updatedWorkout.setName(updatedName);
+                updatedWorkout.setSets(updatedSets);
+                updatedWorkout.setReps(updatedReps);
+
+                adapter.notifyDataSetChanged();
+            }
         }
     }
+
 }

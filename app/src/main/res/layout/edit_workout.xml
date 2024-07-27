@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp">
+
+    <!-- TextView for displaying the date range -->
+    <TextView
+        android:id="@+id/dayText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:textSize="16sp"
+        android:layout_marginBottom="16dp"
+        android:background="#EEEEEE"
+        android:padding="8dp"/>
+
+    <!-- TextView for exercise name -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Exercise Name"
+        android:textSize="16sp"
+        android:layout_marginBottom="8dp"/>
+    <EditText
+        android:id="@+id/edit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter exercise name"
+        android:enabled="false"
+    android:focusable="false"
+    android:focusableInTouchMode="false" />
+
+    <!-- TextView for sets -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Sets"
+        android:textSize="16sp"
+        android:layout_marginBottom="8dp"/>
+    <EditText
+        android:id="@+id/editTextSets"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter number of sets"
+        android:enabled="false"
+    android:focusable="false"
+    android:focusableInTouchMode="false" />
+
+    <!-- TextView for reps -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Reps"
+        android:textSize="16sp"
+        android:layout_marginBottom="8dp"/>
+    <EditText
+        android:id="@+id/editTextReps"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter number of reps"
+        android:enabled="false"
+    android:focusable="false"
+    android:focusableInTouchMode="false" />
+
+    <Button
+        android:id="@+id/editBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Edit" />
+
+    <Button
+        android:id="@+id/saveBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Save" />
+</LinearLayout>
