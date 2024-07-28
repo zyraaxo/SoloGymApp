@@ -35,6 +35,7 @@ public class exercise extends ComponentActivity {
     public Button saveBtn;
     private TextView dayTextView;
     private DatabaseHelper dbHelper;
+    private Button backBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +50,7 @@ public class exercise extends ComponentActivity {
         calendar.setFirstDayOfWeek(Calendar.MONDAY);
         calendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
         saveBtn = findViewById(R.id.saveBtn1);
+        backBtn = findViewById(R.id.backBtn);
 
         SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
         String firstDay = format.format(calendar.getTime());
@@ -80,6 +82,10 @@ public class exercise extends ComponentActivity {
             startActivityForResult(intent, 1);
         });
 
+        backBtn.setOnClickListener(v -> {
+            finish();
+        });
+
         showExercises.setOnItemClickListener((parent, view, position, id) -> {
             Workout selectedWorkout = workoutList.get(position);
             Intent intent = new Intent(exercise.this, editExercise.class);
@@ -98,6 +104,8 @@ public class exercise extends ComponentActivity {
         saveBtn.setOnClickListener(v -> {
             int userId = getCurrentUserId();
             saveWorkoutsToDatabase(userId);
+            Intent intent1 = new Intent(exercise.this, DashboardActivity.class);
+            startActivity(intent1);
         });
 
         loadWorkoutsForUser();
