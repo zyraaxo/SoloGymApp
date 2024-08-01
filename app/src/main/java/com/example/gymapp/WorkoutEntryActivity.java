@@ -50,7 +50,7 @@ public class WorkoutEntryActivity extends ComponentActivity {
         editTextNotes = findViewById(R.id.editTextNotes);
         buttonSave = findViewById(R.id.buttonSave);
         searchBar = findViewById(R.id.search_bar);
-        searchButton = findViewById(R.id.searchBtn);
+        searchButton = findViewById(R.id.search_icon);
         recyclerView = findViewById(R.id.recyclerViewExercises);
 
         // Enable strict mode policy for quick network testing (not recommended for production)

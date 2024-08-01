@@ -3,37 +3,55 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@color/black"
     android:padding="16dp">
 
-    <LinearLayout
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Find a Workout"
+        android:textColor="@color/white"
+        android:layout_marginBottom="20dp"
+        android:fontFamily="@font/uber"
+        android:padding="5dp"
+        android:layout_marginStart="10dp"
+        android:textSize="26sp">
+
+    </TextView>
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginBottom="70dp"
-        android:layout_marginTop="50dp"
-        android:gravity="center_vertical">
+        android:layout_marginBottom="40dp"
+        android:padding="8dp">
 
-        <!-- Image view for the icon -->
         <ImageView
-            android:id="@+id/searchBtn"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_marginEnd="8dp"
-            android:src="@drawable/sicqn"
+            android:id="@+id/search_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="8dp"
+            android:src="@android:drawable/ic_menu_search"
             />
 
-        <!-- EditText for search bar -->
         <EditText
             android:id="@+id/search_bar"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:hint="Search muscle groups here.."
-            android:background="@drawable/search_bar_background"
-            android:padding="10dp"
-            android:textColorHint="#888888" />
+            android:layout_toRightOf="@id/search_icon"
+            android:hint="Search for a workout..."
+            android:textColorHint="@color/white"
+            android:fontFamily="@font/uber"
+            android:textSize="15sp"
+            android:textColor="@color/white"
 
-    </LinearLayout>
+            android:padding="20dp"
+            android:background="@drawable/search_bar_background"
+            />
+
+    </RelativeLayout>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewExercises"
         android:layout_width="match_parent"
@@ -57,19 +75,40 @@
         android:id="@+id/editTextExerciseName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@drawable/search_bar_background"
+        android:padding="15dp"
+        android:fontFamily="@font/uber"
+        android:textColor="@color/white"
+        android:textColorHint="@color/white"
+        android:layout_marginBottom="10dp"
         android:hint="Exercise Name" />
 
     <EditText
         android:id="@+id/editTextSets"
+        android:layout_marginBottom="10dp"
+
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:padding="15dp"
+        android:fontFamily="@font/uber"
+        android:textColor="@color/white"
+        android:textColorHint="@color/white"
+        android:background="@drawable/search_bar_background"
+
         android:hint="Sets"
         android:inputType="number" />
 
     <EditText
         android:id="@+id/editTextReps"
+        android:layout_marginBottom="10dp"
+
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:padding="15dp"
+        android:fontFamily="@font/uber"
+        android:textColor="@color/white"
+        android:textColorHint="@color/white"
+        android:background="@drawable/search_bar_background"
         android:hint="Reps"
         android:inputType="number" />
 
@@ -77,6 +116,13 @@
         android:id="@+id/editTextRPE"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:padding="15dp"
+        android:fontFamily="@font/uber"
+        android:textColor="@color/white"
+        android:textColorHint="@color/white"
+        android:layout_marginBottom="10dp"
+
+        android:background="@drawable/search_bar_background"
         android:hint="RPE (Rate of Perceived Exertion)"
         android:inputType="numberDecimal" />
 
@@ -85,6 +131,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Notes"
+        android:padding="15dp"
+        android:layout_marginBottom="10dp"
+
+        android:fontFamily="@font/uber"
+        android:textColor="@color/white"
+        android:textColorHint="@color/white"
+        android:background="@drawable/search_bar_background"
         android:inputType="textMultiLine"
         android:minLines="3" />
 
